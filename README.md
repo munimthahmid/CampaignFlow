@@ -39,6 +39,51 @@ A beautiful, modern task management application designed for managing influencer
 
 ---
 
+## 🔄 User Flow
+
+The application follows a simple, intuitive workflow:
+
+```mermaid
+graph TD
+    A[User visits the app URL] --> B{Is the user logged in?}
+    B -->|No| C[Show Login/Signup Page]
+    C --> D[User signs in via Supabase Auth]
+    B -->|Yes| E[Show Campaign Task Dashboard]
+    D --> E
+    E --> F[User sees a list of their tasks]
+    E --> G(User clicks '+ Add Task')
+    G --> H[Show 'Add Task' form/modal]
+    H --> I{Submits form}
+    I --> J[Server Action saves task to Supabase]
+    J --> E
+    F --> K(User interacts with a task)
+    K --> L[Option to change status or delete]
+    L --> J
+```
+
+### Key Workflows
+
+1. **Authentication Flow**
+   - Unauthenticated users are redirected to login
+   - Support for email/password and Google OAuth
+   - Email verification required (Supabase mode)
+   - Session persists across browser refreshes
+
+2. **Task Management Flow**
+   - View all tasks in Kanban columns
+   - Drag tasks between columns to update status
+   - Click "Add Task" to create new campaigns
+   - Edit tasks via click or hover actions
+   - Delete with confirmation dialog
+
+3. **Filtering & Search Flow**
+   - Apply filters by priority, platform, or assignee
+   - Search tasks in real-time
+   - Clear all filters with one click
+   - Use keyboard shortcuts for speed
+
+---
+
 ## 🛠️ Tech Stack
 
 ### Core
