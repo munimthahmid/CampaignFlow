@@ -156,10 +156,10 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <AppHeader onAddTask={() => setShowAddModal(true)} onSearch={(q) => setFilters((f) => ({ ...f, search: q }))} />
 
-      <main className="p-6 space-y-6">
+      <main className="max-w-[1920px] mx-auto px-6 py-8 space-y-6">
         <FiltersBar filters={filters} onFiltersChange={setFilters} assignees={assignees} />
 
         {isLoading ? (

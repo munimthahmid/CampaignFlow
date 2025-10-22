@@ -11,12 +11,22 @@ export async function middleware(req: NextRequest) {
 
   if (backend === 'supabase') {
     const supabase = createMiddlewareClient({ req, res })
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
+    const { data: { session } } = await supabase.auth.getSession()
     if (!session) {
       const url = req.nextUrl.clone()
       url.pathname = '/login'
+      return NextResponse.redirect(url)
+    }
+    // Enforce email confirmation before allowing dashboard
+    const { data: { user } } = await supabase.auth.getUser()
+    const provider = (user as any)?.app_metadata?.provider
+    const email = (user as any)?.email as string | undefined
+    const confirmed = (user as any)?.email_confirmed_at || (user as any)?.confirmed_at
+    // Skip verification prompt for OAuth providers (Google, etc.)
+    if (provider === 'email' && !confirmed && email) {
+      const url = req.nextUrl.clone()
+      url.pathname = '/verify-email'
+      url.searchParams.set('email', email)
       return NextResponse.redirect(url)
     }
     return res

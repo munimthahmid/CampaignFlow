@@ -157,3 +157,9 @@ Adapter Toggle (mock → Supabase)
 Deployment Notes
 - Set env vars in Vercel Project Settings → Environment Variables.
 - Ensure `@supabase/auth-helpers-nextjs` cookies work with your domain; use the App Router examples.
+
+Google OAuth
+- In Supabase: Authentication → Providers → Google → Enable and add Client ID/Secret from Google Cloud Console.
+- In Authentication → URL Configuration:
+  - Add `https://your-domain/auth/callback` and `http://localhost:3000/auth/callback` to Additional Redirect URLs.
+- Frontend uses `supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/auth/callback' } })` on login/signup.

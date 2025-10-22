@@ -1,5 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { Instagram, Youtube, Music2, BadgeInfo } from "lucide-react"
+import type { ReactNode } from "react"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -40,15 +42,15 @@ export function getPriorityColor(priority: string): string {
   }
 }
 
-export function getPlatformIcon(platform: string): string {
+export function getPlatformIcon(platform: string, className: string = "w-3.5 h-3.5"): ReactNode {
   switch (platform) {
     case "Instagram":
-      return "📷"
+      return <Instagram className={className} />
     case "TikTok":
-      return "🎵"
+      return <Music2 className={className} />
     case "YouTube":
-      return "▶️"
+      return <Youtube className={className} />
     default:
-      return "📱"
+      return <BadgeInfo className={className} />
   }
 }

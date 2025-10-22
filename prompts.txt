@@ -10,4 +10,6 @@ frontend for our project.
 4. I have added the UI frontend. Now for backend database and Authentication we will use supabase. I have already added NEXT_PUBLIC_SUPABASE_URL,
 NEXT_PUBLIC_SUPABASE_ANON_KEY in the .env.local, include email verification on first time signup, I have already enabled email verification
 in supabase and the callback url currently is localhost:3000
-5.
+5. There is few problems with the UI, when I hover on any button the mouse icon should change into hand icon, which is not happening. Fix it
+and also revamp the UI, the micro interaction has to be smoother, use professional color gradient and modern glass morphism effect, 
+make sure of consistent spacing and typography and overall make a first class design revamp.

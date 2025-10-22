@@ -7,16 +7,15 @@ export default async function Home() {
 
   if (backend === 'supabase') {
     try {
-      const supabase = supabaseServer()
+      const supabase = await supabaseServer()
       const { data: { session } } = await supabase.auth.getSession()
       redirect(session ? '/dashboard' : '/login')
     } catch {
       redirect('/login')
     }
   } else {
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const hasSession = cookieStore.get('session')?.value
     redirect(hasSession ? '/dashboard' : '/login')
   }
 }
-

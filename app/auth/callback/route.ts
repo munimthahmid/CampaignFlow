@@ -7,10 +7,10 @@ export async function GET(req: Request) {
   const code = url.searchParams.get('code')
 
   if (code) {
-    const supabase = createRouteHandlerClient({ cookies })
+    const cookieStore = await cookies()
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
     await supabase.auth.exchangeCodeForSession(code)
   }
 
   return NextResponse.redirect(new URL('/dashboard', req.url))
 }
-
