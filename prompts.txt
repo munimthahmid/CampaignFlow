@@ -1,0 +1,13 @@
+1.I would like to build a todo app, but it can't be any simple to-do app, it needs to be creative
+unique, first of it's kind, give me 10 best ideas of your to build this todo ,  I want it to be related to 
+influencer marketing. Give me your best 10 idea with explanation why this idea stands out.
+
+2. Ok I like the  "Campaign Task Manager" for an Influencer Marketing Team. Now let's outline a project plan to build it with standard task scheduling, labeling status,
+priorities, asssignee etc. Do websearch on unique task manager idea , take inspiration from what other people has build.
+
+3. Ok, so I will generate the frontend with v0. Give me a complete prompt to give to v0 so that it can build a stunning and professional
+frontend for our project.
+4. I have added the UI frontend. Now for backend database and Authentication we will use supabase. I have already added NEXT_PUBLIC_SUPABASE_URL,
+NEXT_PUBLIC_SUPABASE_ANON_KEY in the .env.local, include email verification on first time signup, I have already enabled email verification
+in supabase and the callback url currently is localhost:3000
+5.

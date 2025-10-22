@@ -1,7 +1,10 @@
 "use client"
 
 import { Search, Plus, Bell, LogOut } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
+import { USING_SUPABASE } from "@/lib/config"
+import { supabaseClient } from "@/lib/supabase/client"
 
 interface AppHeaderProps {
   onAddTask: () => void
@@ -10,6 +13,30 @@ interface AppHeaderProps {
 
 export function AppHeader({ onAddTask, onSearch }: AppHeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const router = useRouter()
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Focus search: Cmd/Ctrl+K or '/'
+      if ((e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) || e.key === "/") {
+        e.preventDefault()
+        inputRef.current?.focus()
+      }
+    }
+    window.addEventListener("keydown", handler)
+    return () => window.removeEventListener("keydown", handler)
+  }, [])
+
+  const handleLogout = async () => {
+    if (USING_SUPABASE) {
+      const supabase = supabaseClient()
+      await supabase.auth.signOut()
+    } else {
+      document.cookie = "session=; Max-Age=0; path=/"
+    }
+    router.push("/login")
+  }
 
   return (
     <header className="sticky top-0 z-40 bg-card border-b border-border">
@@ -28,6 +55,7 @@ export function AppHeader({ onAddTask, onSearch }: AppHeaderProps) {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
+              ref={inputRef}
               type="text"
               placeholder="Search tasks... (⌘K)"
               onChange={(e) => onSearch?.(e.target.value)}
@@ -67,7 +95,7 @@ export function AppHeader({ onAddTask, onSearch }: AppHeaderProps) {
                   Settings
                 </button>
                 <div className="border-t border-border my-1" />
-                <button className="w-full text-left px-4 py-2 text-sm text-rose-600 dark:text-rose-400 hover:bg-muted transition-colors flex items-center gap-2">
+                <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-rose-600 dark:text-rose-400 hover:bg-muted transition-colors flex items-center gap-2">
                   <LogOut className="w-4 h-4" />
                   Logout
                 </button>

@@ -7,38 +7,38 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { USING_SUPABASE } from "@/lib/config"
 import { supabaseClient } from "@/lib/supabase/client"
-import { useState as useReactState } from "react"
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [errorMsg, setErrorMsg] = useReactState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     if (USING_SUPABASE) {
       const supabase = supabaseClient()
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
       setIsLoading(false)
-      if (error) {
-        const msg = (error as any)?.message || "Login failed"
-        if (msg.toLowerCase().includes("confirm") || msg.toLowerCase().includes("email not confirmed")) {
-          router.push(`/verify-email?email=${encodeURIComponent(email)}`)
-          return
-        }
-        setErrorMsg(msg)
-        return
+      if (error) return
+      // If email confirmation is enabled, Supabase won't return a session.
+      if (!data.session) {
+        router.push(`/verify-email?email=${encodeURIComponent(email)}`)
+      } else {
+        router.push('/dashboard')
       }
-      router.push("/dashboard")
     } else {
-      // Simulate login
       setTimeout(() => {
         document.cookie = `session=demo; max-age=${7 * 24 * 60 * 60}; path=/`
         router.push("/dashboard")
-      }, 500)
+      }, 600)
     }
   }
 
@@ -50,8 +50,8 @@ export default function LoginPage() {
           <div className="w-12 h-12 rounded-lg bg-accent text-accent-foreground flex items-center justify-center font-bold text-lg mx-auto">
             CF
           </div>
-          <h1 className="text-3xl font-bold text-foreground">CampaignFlow</h1>
-          <p className="text-muted-foreground">Manage influencer campaigns effortlessly</p>
+          <h1 className="text-3xl font-bold text-foreground">Create your account</h1>
+          <p className="text-muted-foreground">Start managing influencer campaigns</p>
         </div>
 
         {/* Form */}
@@ -85,29 +85,15 @@ export default function LoginPage() {
             disabled={isLoading}
             className="w-full px-4 py-2 rounded-lg bg-accent text-accent-foreground font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
           >
-            {isLoading ? "Signing in..." : "Sign In"}
+            {isLoading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
 
-        {errorMsg && <p className="text-center text-sm text-rose-500">{errorMsg}</p>}
-
-        {/* Signup Link */}
+        {/* Login Link */}
         <p className="text-center text-sm text-muted-foreground">
-          Don't have an account?{" "}
-          <Link href="/signup" className="text-accent hover:underline font-medium">
-            Sign up
-          </Link>
-        </p>
-
-        {/* Legal */}
-        <p className="text-center text-xs text-muted-foreground">
-          By signing in, you agree to our{" "}
-          <Link href="#" className="hover:underline">
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link href="#" className="hover:underline">
-            Privacy Policy
+          Already have an account?{" "}
+          <Link href="/login" className="text-accent hover:underline font-medium">
+            Sign in
           </Link>
         </p>
       </div>

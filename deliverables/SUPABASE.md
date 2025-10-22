@@ -28,6 +28,13 @@ Quickstart
 6) Implement Server Actions in `app/actions.ts` for `listTasks`, `createTask`, `updateTask`, `deleteTask`.
 7) Replace mock `dataClient` calls with these actions.
 
+Email Confirmation
+- In Supabase Auth → Providers → Email, enable Confirm Email.
+- Set Redirect URLs to your dev and prod origins (e.g., http://localhost:3000, https://your-app.vercel.app).
+- UX flow:
+  - Signup redirects to `/verify-email?email=...` where users can resend confirmation.
+  - After clicking the email link, users can log in at `/login`.
+
 Types (align UI and DB)
 ```ts
 export type Priority = 'High' | 'Medium' | 'Low';
@@ -150,4 +157,3 @@ Adapter Toggle (mock → Supabase)
 Deployment Notes
 - Set env vars in Vercel Project Settings → Environment Variables.
 - Ensure `@supabase/auth-helpers-nextjs` cookies work with your domain; use the App Router examples.
-

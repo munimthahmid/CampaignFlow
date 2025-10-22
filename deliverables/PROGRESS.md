@@ -6,15 +6,16 @@ Purpose: concise, high-signal updates with links to work artifacts. No standups,
 
 ## Current Status
 - [x] Defined UI scope and UX for Kanban-style influencer campaign manager
-- [x] Auth-lite flow (UI only) planned: login + protected dashboard
 - [x] v0 frontend prompt authored (see ../../refined_prompt.md)
 - [x] Component architecture + data model outlined
-- [ ] v0 UI generation (in progress)
-- [ ] Wire mock data client (create/update/delete/list)
-- [ ] Implement DnD with @hello-pangea/dnd
-- [ ] Search + filters (client-side)
-- [ ] Add/Edit/Delete flows with toasts
-- [ ] Accessibility pass and responsive polish
+- [x] UI generated and assembled (Next.js + Tailwind)
+- [x] Mock data client with CRUD + optimistic updates
+- [x] DnD with @hello-pangea/dnd across 4 columns
+- [x] Search + filters (client-side)
+- [x] Add/Edit/Delete flows with toasts, skeletons, empty states
+- [x] Supabase auth + CRUD adapter behind env toggle
+- [x] Email confirmation flow with verify + resend
+- [ ] Accessibility sweep + final polish
 - [ ] Deploy to Vercel + share live URL
 
 ## Today’s Updates
@@ -23,10 +24,9 @@ Purpose: concise, high-signal updates with links to work artifacts. No standups,
 - Created deliverables folder with progress and outline docs for clear async visibility.
 
 ## Next 1–2 Hours
-- Paste prompt into v0 and generate full UI codebase.
-- Add mock `dataClient` (in-memory, async, optimistic updates).
-- Integrate drag-and-drop (keyboard accessible) across four columns.
-- Implement Add/Edit/Delete flows with toasts and empty/skeleton states.
+- Final a11y pass (focus states, labels, reduced motion)
+- Vercel deploy + set env vars; confirm Supabase path end-to-end
+- Record quick Loom walkthrough
 
 ## Risks & Mitigations
 - v0 large-output flakiness → Mitigation: pivot to component-by-component prompts (Dashboard, TaskCard, Modal).
@@ -47,4 +47,3 @@ Purpose: concise, high-signal updates with links to work artifacts. No standups,
 
 ## Time Spent (rolling)
 - Prompt + design + docs: <fill on submission>
-

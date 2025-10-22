@@ -12,9 +12,13 @@ import { EditTaskDrawer } from "@/components/EditTaskDrawer"
 import { DeleteConfirmDialog } from "@/components/DeleteConfirmDialog"
 import { BoardSkeleton } from "@/components/Skeletons"
 import { useToast } from "@/components/ToastProvider"
+import { useRouter } from "next/navigation"
+import { USING_SUPABASE } from "@/lib/config"
+import { supabaseClient } from "@/lib/supabase/client"
 
 export default function DashboardPage() {
   const { addToast } = useToast()
+  const router = useRouter()
   const [tasks, setTasks] = useState<Task[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
@@ -30,6 +34,27 @@ export default function DashboardPage() {
   // Load tasks
   useEffect(() => {
     const loadTasks = async () => {
+      // Route guard for supabase
+      if (USING_SUPABASE) {
+        try {
+          const supabase = supabaseClient()
+          const { data: { session } } = await supabase.auth.getSession()
+          if (!session) {
+            router.replace('/login')
+            return
+          }
+        } catch {}
+      } else {
+        // Mock cookie-based guard
+        try {
+          const hasSession = document.cookie.split(";").some((c) => c.trim().startsWith("session="))
+          if (!hasSession) {
+            router.replace('/login')
+            return
+          }
+        } catch {}
+      }
+
       try {
         const data = await dataClient.listTasks()
         setTasks(data)
@@ -41,6 +66,20 @@ export default function DashboardPage() {
     }
     loadTasks()
   }, [addToast])
+
+  // Keyboard shortcuts: 'n' opens Add Task
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const active = document.activeElement as HTMLElement | null
+      const isTyping = active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")
+      if (!isTyping && e.key.toLowerCase() === "n") {
+        e.preventDefault()
+        setShowAddModal(true)
+      }
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [])
 
   // Filter tasks
   const filteredTasks = useMemo(() => {
@@ -118,7 +157,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <AppHeader onAddTask={() => setShowAddModal(true)} />
+      <AppHeader onAddTask={() => setShowAddModal(true)} onSearch={(q) => setFilters((f) => ({ ...f, search: q }))} />
 
       <main className="p-6 space-y-6">
         <FiltersBar filters={filters} onFiltersChange={setFilters} assignees={assignees} />
